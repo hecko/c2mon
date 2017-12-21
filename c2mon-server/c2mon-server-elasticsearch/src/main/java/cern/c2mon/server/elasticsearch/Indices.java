@@ -156,8 +156,8 @@ public class Indices {
         } else {
           return false;
         }
-      } catch (Exception e) {
-        log.error("Error while deleting index");
+      } catch (InterruptedException|ExecutionException e) {
+        log.error("Error while deleting index", e);
         return false;
       }
     }
