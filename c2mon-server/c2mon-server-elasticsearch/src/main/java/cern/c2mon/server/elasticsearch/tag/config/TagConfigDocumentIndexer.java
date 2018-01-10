@@ -47,15 +47,16 @@ public class TagConfigDocumentIndexer {
   private final ElasticsearchClient client;
 
   private final String configIndex;
-  private final TagFacadeGateway tagFacadeGateway;
-  private final TagConfigDocumentConverter converter;
 
   @Autowired
-  public TagConfigDocumentIndexer(final ElasticsearchClient client, final ElasticsearchProperties properties, TagFacadeGateway tagFacadeGateway, TagConfigDocumentConverter converter) {
+  private TagFacadeGateway tagFacadeGateway;
+  @Autowired
+  private TagConfigDocumentConverter converter;
+
+  @Autowired
+  public TagConfigDocumentIndexer(final ElasticsearchClient client, final ElasticsearchProperties properties) {
     this.client = client;
     this.configIndex = properties.getTagConfigIndex();
-    this.tagFacadeGateway = tagFacadeGateway;
-    this.converter = converter;
   }
 
   void indexTagConfig(final TagConfigDocument tag) {
@@ -115,6 +116,9 @@ public class TagConfigDocumentIndexer {
    * Re-index all tag config documents from the cache.
    */
   void reindexTagConfigDocuments() {
+    if (tagFacadeGateway == null)
+      throw new IllegalStateException("Tag Facade Gateway is null");
+
     for (Long id : tagFacadeGateway.getKeys()) {
       converter.convert(tagFacadeGateway.getTag(id)).ifPresent(this::updateTagConfig);
     }
