@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -86,8 +88,6 @@ public class TagFacadeGatewayImpl implements TagFacadeGateway {
     this.tagLocationService = tagLocationService;
   }
 
-//  private <T extends Tag> CommonTagFacade<>
-  
   @SuppressWarnings("unchecked")
   private <T extends Tag> CommonTagFacade<T> getFacade(final T tag) {
     if (tag instanceof RuleTag) {
@@ -139,15 +139,30 @@ public class TagFacadeGatewayImpl implements TagFacadeGateway {
   public TagWithAlarms getTagWithAlarms(Long id) {
     return getFacade(id).getTagWithAlarms(id);    
   }
-  
+
+  @Override
+  public List<Long> getKeys() {
+    return Stream.concat(
+        Stream.concat(
+            this.controlTagFacade.getKeys().stream(),
+            this.dataTagFacade.getKeys().stream()
+        ),
+        this.ruleTagFacade.getKeys().stream()
+    ).collect(Collectors.toList());
+  }
+
+  @Override
+  public Tag getTag(Long id) {
+    return this.getFacade(id).getTag(id);
+  }
+
   @Override
   public Collection<TagWithAlarms> getTagsWithAlarms(String regex) {
-    boolean isRegex = true;
     Collection<TagWithAlarms> tagWithAlarms = new ArrayList<>();
     
     // Remove escaped wildcards and then check if there are any left
     String test = regex.replace("\\*", "").replace("\\?", "");
-    isRegex = test.contains("*") || test.contains("?");
+    boolean isRegex = test.contains("*") || test.contains("?");
     
     if (isRegex) {
       Collection<Tag> tags = tagLocationService.findByNameWildcard(regex);
@@ -174,6 +189,4 @@ public class TagFacadeGatewayImpl implements TagFacadeGateway {
   public boolean isInTagCache(Long id) {
     return ruleTagFacade.isInTagCache(id) || controlTagFacade.isInTagCache(id) || dataTagFacade.isInTagCache(id);
   }
-
-  
 }
