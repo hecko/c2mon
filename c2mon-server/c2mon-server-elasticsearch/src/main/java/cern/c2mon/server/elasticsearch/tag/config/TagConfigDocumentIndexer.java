@@ -116,8 +116,9 @@ public class TagConfigDocumentIndexer {
    * Re-index all tag config documents from the cache.
    */
   void reindexTagConfigDocuments() {
-    if (tagFacadeGateway == null)
+    if (tagFacadeGateway == null) {
       throw new IllegalStateException("Tag Facade Gateway is null");
+    }
 
     for (Long id : tagFacadeGateway.getKeys()) {
       converter.convert(tagFacadeGateway.getTag(id)).ifPresent(this::updateTagConfig);
