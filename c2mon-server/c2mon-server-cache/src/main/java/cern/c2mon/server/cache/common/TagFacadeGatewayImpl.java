@@ -16,20 +16,7 @@
  *****************************************************************************/
 package cern.c2mon.server.cache.common;
 
-import java.sql.Timestamp;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import cern.c2mon.server.cache.CommonTagFacade;
-import cern.c2mon.server.cache.ControlTagFacade;
-import cern.c2mon.server.cache.DataTagFacade;
-import cern.c2mon.server.cache.RuleTagFacade;
-import cern.c2mon.server.cache.TagFacadeGateway;
-import cern.c2mon.server.cache.TagLocationService;
+import cern.c2mon.server.cache.*;
 import cern.c2mon.server.common.alarm.Alarm;
 import cern.c2mon.server.common.alarm.TagWithAlarms;
 import cern.c2mon.server.common.control.ControlTag;
@@ -37,6 +24,11 @@ import cern.c2mon.server.common.rule.RuleTag;
 import cern.c2mon.server.common.tag.Tag;
 import cern.c2mon.shared.common.datatag.TagQualityStatus;
 import cern.c2mon.shared.daq.config.Change;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.sql.Timestamp;
+import java.util.*;
 
 /**
  * Implementation of the TagFacadeGateway.
