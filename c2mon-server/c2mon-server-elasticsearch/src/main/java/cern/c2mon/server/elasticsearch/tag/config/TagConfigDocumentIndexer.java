@@ -86,7 +86,11 @@ public class TagConfigDocumentIndexer {
    * @param tag the tag
    */
   void updateTagConfig(final TagConfigDocument tag) {
-      UpdateRequest updateRequest = new UpdateRequest(configIndex, TYPE,
+    if (!Indices.exists(configIndex)) {
+      Indices.create(configIndex, TYPE, MappingFactory.createTagConfigMapping());
+    }
+
+    UpdateRequest updateRequest = new UpdateRequest(configIndex, TYPE,
           String.valueOf(tag.getId())).doc(tag.toString()).routing(tag.getId());
       updateRequest.upsert(this.getIndexRequest(tag));
       try {
