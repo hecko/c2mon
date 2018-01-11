@@ -27,6 +27,7 @@ import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +40,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-@ManagedResource
+@ManagedResource(objectName = "cern.c2mon:name=tagConfigDocumentIndexer")
 public class TagConfigDocumentIndexer {
 
   private static final String TYPE = "tag_config";
@@ -115,7 +116,8 @@ public class TagConfigDocumentIndexer {
   /**
    * Re-index all tag config documents from the cache.
    */
-  void reindexTagConfigDocuments() {
+  @ManagedOperation(description = "Re-indexes all tag configs from the cache to Elasticsearch")
+  public void reindexAllTagConfigDocuments() {
     if (tagFacadeGateway == null) {
       throw new IllegalStateException("Tag Facade Gateway is null");
     }

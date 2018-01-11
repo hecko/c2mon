@@ -81,7 +81,7 @@ public class TagConfigDocumentIndexerTests extends BaseElasticsearchIntegrationT
     DeleteIndexResponse deleteResponse = client.getClient().admin().indices().prepareDelete(index).get();
     assertTrue("The index could not be deleted", deleteResponse.isAcknowledged());
     //reindex everything from the cache
-    this.indexer.reindexTagConfigDocuments();
+    this.indexer.reindexAllTagConfigDocuments();
     // Refresh the index to make sure the document is searchable
     client.getClient().admin().indices().prepareRefresh(index).get();
     client.getClient().admin().cluster().prepareHealth().setIndices(index).setWaitForYellowStatus().get();

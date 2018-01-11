@@ -17,11 +17,7 @@
 package cern.c2mon.server.cache.common;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -142,13 +138,10 @@ public class TagFacadeGatewayImpl implements TagFacadeGateway {
 
   @Override
   public List<Long> getKeys() {
-    return Stream.concat(
-        Stream.concat(
-            this.controlTagFacade.getKeys().stream(),
-            this.dataTagFacade.getKeys().stream()
-        ),
-        this.ruleTagFacade.getKeys().stream()
-    ).collect(Collectors.toList());
+    Set<Long> keys = new HashSet<>(this.controlTagFacade.getKeys());
+    keys.addAll(this.dataTagFacade.getKeys());
+    keys.addAll(this.ruleTagFacade.getKeys());
+    return new ArrayList<>(keys);
   }
 
   @Override
