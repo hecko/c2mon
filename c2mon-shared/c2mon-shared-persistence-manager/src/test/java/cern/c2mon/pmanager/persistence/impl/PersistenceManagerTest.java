@@ -22,8 +22,6 @@ import cern.c2mon.pmanager.mock.DBHandlerImpl;
 import cern.c2mon.pmanager.mock.FallbackImpl;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,7 +46,7 @@ public class PersistenceManagerTest {
    * It sets all the objects needed for running the test
    */
   @BeforeClass
-  public static void setUp() throws IOException {
+  public static void before() throws IOException {
     final File fallbackFile = File.createTempFile("DataTagFallback", ".log");
     fallbackFile.deleteOnExit();
     persistenceManager = new PersistenceManager<>(new DBHandlerImpl(), fallbackFile.getAbsolutePath(), new AlarmListenerImpl(), new FallbackImpl());
