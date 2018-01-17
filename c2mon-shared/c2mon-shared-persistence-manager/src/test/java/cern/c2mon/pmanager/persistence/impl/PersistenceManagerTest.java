@@ -37,7 +37,6 @@ import static org.junit.Assert.assertEquals;
  *
  * @author mruizgar
  */
-@RunWith(JUnit4.class)
 public class PersistenceManagerTest {
 
   /**
