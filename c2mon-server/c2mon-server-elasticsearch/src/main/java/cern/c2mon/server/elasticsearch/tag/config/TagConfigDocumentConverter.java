@@ -20,14 +20,19 @@ package cern.c2mon.server.elasticsearch.tag.config;
 import cern.c2mon.server.cache.EquipmentCache;
 import cern.c2mon.server.cache.ProcessCache;
 import cern.c2mon.server.cache.SubEquipmentCache;
+import cern.c2mon.server.common.alarm.Alarm;
 import cern.c2mon.server.common.tag.Tag;
+import cern.c2mon.server.elasticsearch.alarm.BaseAlarmDocumentConverter;
 import cern.c2mon.server.elasticsearch.tag.BaseTagDocumentConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author Szymon Halastra
@@ -41,8 +46,14 @@ public class TagConfigDocumentConverter extends BaseTagDocumentConverter<TagConf
     super(processCache, equipmentCache, subEquipmentCache, TagConfigDocument::new);
   }
 
+  public Optional<TagConfigDocument> convert(final Tag tag, final Collection<Alarm> alarms) {
+    Optional<TagConfigDocument> document = this.convert(tag);
+    document.ifPresent(doc -> doc.put("alarms", alarms.stream().map((new BaseAlarmDocumentConverter())::convert).collect(toList())));
+    return document;
+  }
+
   @Override
-  public Optional<TagConfigDocument> convert(Tag tag) {
+  public Optional<TagConfigDocument> convert(final Tag tag) {
     TagConfigDocument document = new TagConfigDocument();
     document.putAll(super.convert(tag).orElse(new TagConfigDocument()));
     document.put("timestamp", System.currentTimeMillis());
@@ -50,7 +61,7 @@ public class TagConfigDocumentConverter extends BaseTagDocumentConverter<TagConf
   }
 
   @Override
-  protected Map<String, Object> getC2monMetadata(Tag tag) {
+  protected Map<String, Object> getC2monMetadata(final Tag tag) {
     Map<String, Object> map = super.getC2monMetadata(tag);
     map.put("logged", tag.isLogged());
     return map;
