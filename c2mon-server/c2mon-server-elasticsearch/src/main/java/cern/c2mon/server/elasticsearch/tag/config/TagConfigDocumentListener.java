@@ -86,6 +86,7 @@ public class TagConfigDocumentListener implements ConfigurationEventListener {
         case REMOVE:
           indexer.removeTagConfigById(tag.getId());
           break;
+        default: //do nothing
       }
     } catch (Exception e) {
       throw new RuntimeException("Error indexing tag configuration", e);

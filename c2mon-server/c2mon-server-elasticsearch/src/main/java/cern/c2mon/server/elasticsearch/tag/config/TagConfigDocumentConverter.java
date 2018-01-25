@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -46,7 +46,14 @@ public class TagConfigDocumentConverter extends BaseTagDocumentConverter<TagConf
     super(processCache, equipmentCache, subEquipmentCache, TagConfigDocument::new);
   }
 
-  public Optional<TagConfigDocument> convert(final Tag tag, final Collection<Alarm> alarms) {
+  /**
+   * Convert a {@link Tag} and list of {@link Alarm}s to a {@link TagConfigDocument}.
+   *
+   * @param tag the tag
+   * @param alarms the alarms
+   * @return the tag config document
+   */
+  public Optional<TagConfigDocument> convert(final Tag tag, final List<Alarm> alarms) {
     Optional<TagConfigDocument> document = this.convert(tag);
     document.ifPresent(doc -> doc.put("alarms", alarms.stream().map((new BaseAlarmDocumentConverter())::convert).collect(toList())));
     return document;

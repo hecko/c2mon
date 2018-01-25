@@ -91,7 +91,7 @@ public class ElasticsearchServiceTest {
   }
 
   @Before
-  public void setup() {
+  public void resetMocks() {
     reset(tagFacadeGateway);
   }
 

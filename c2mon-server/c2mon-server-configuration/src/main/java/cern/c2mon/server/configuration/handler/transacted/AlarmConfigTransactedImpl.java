@@ -16,12 +16,16 @@
  *****************************************************************************/
 package cern.c2mon.server.configuration.handler.transacted;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Properties;
-
+import cern.c2mon.server.cache.AlarmCache;
+import cern.c2mon.server.cache.AlarmFacade;
+import cern.c2mon.server.cache.exception.CacheElementNotFoundException;
+import cern.c2mon.server.cache.loading.AlarmLoaderDAO;
+import cern.c2mon.server.common.alarm.Alarm;
 import cern.c2mon.server.common.listener.ConfigurationEventListener;
+import cern.c2mon.server.configuration.handler.impl.TagConfigGateway;
 import cern.c2mon.shared.client.configuration.ConfigConstants;
+import cern.c2mon.shared.client.configuration.ConfigurationElement;
+import cern.c2mon.shared.client.configuration.ConfigurationElementReport;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericApplicationContext;
@@ -30,14 +34,8 @@ import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import cern.c2mon.server.cache.AlarmCache;
-import cern.c2mon.server.cache.AlarmFacade;
-import cern.c2mon.server.cache.exception.CacheElementNotFoundException;
-import cern.c2mon.server.cache.loading.AlarmLoaderDAO;
-import cern.c2mon.server.common.alarm.Alarm;
-import cern.c2mon.server.configuration.handler.impl.TagConfigGateway;
-import cern.c2mon.shared.client.configuration.ConfigurationElement;
-import cern.c2mon.shared.client.configuration.ConfigurationElementReport;
+import java.util.Collection;
+import java.util.Properties;
 
 /**
  * Implementation of transacted methods.
@@ -76,6 +74,7 @@ public class AlarmConfigTransactedImpl implements AlarmConfigTransacted {
    * @param alarmFacade the alarm facade bean
    * @param alarmDAO the alarm DAO bean
    * @param alarmCache the alarm cache bean
+   * @param context the application context
    */
   @Autowired
   public AlarmConfigTransactedImpl(final AlarmFacade alarmFacade, final AlarmLoaderDAO alarmDAO,
