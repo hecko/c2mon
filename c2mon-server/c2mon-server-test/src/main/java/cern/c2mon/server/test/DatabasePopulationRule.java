@@ -40,10 +40,13 @@ public class DatabasePopulationRule extends ExternalResource {
   @Autowired
   protected DataSource cacheDataSource;
 
+  private Connection conn;
+
   @Override
   protected void before() throws SQLException {
     ResourceDatabasePopulator populator = new ResourceDatabasePopulator(new ClassPathResource("sql/cache-data-remove.sql"));
-    if (cacheDataSource.getConnection().getMetaData().getURL().contains("mysql")) {
+    conn = cacheDataSource.getConnection();
+    if (conn.getMetaData().getURL().contains("mysql")) {
       populator.addScript(new ClassPathResource("sql/cache-data-update-sequence.sql"));
     } else {
       populator.addScript(new ClassPathResource("sql/cache-data-alter-sequence.sql"));
@@ -55,7 +58,7 @@ public class DatabasePopulationRule extends ExternalResource {
   @Override
   protected void after() {
     try {
-      cacheDataSource.getConnection().close();
+      conn.close();
     } catch (SQLException e) {
       log.error("Could not close DB connection", e);
     }
