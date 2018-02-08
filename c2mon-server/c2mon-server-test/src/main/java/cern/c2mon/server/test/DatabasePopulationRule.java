@@ -34,7 +34,7 @@ import java.sql.SQLException;
 public class DatabasePopulationRule extends ExternalResource {
 
   @Autowired
-  private DataSource cacheDataSource;
+  protected DataSource cacheDataSource;
 
   @Override
   protected void before() throws SQLException {
