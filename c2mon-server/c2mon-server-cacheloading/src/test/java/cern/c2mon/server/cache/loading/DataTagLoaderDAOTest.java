@@ -67,14 +67,14 @@ public class DataTagLoaderDAOTest {
   public void testGetBatch() {
     List<Long> expectedResult = Arrays.asList(200000L, 200001L, 200002L, 200003L, 200004L, 200005L, 200010L, 200011L, 200012L, 210000L, 210001L, 210002L, 210003L, 210008L, 210009L, 210010L);
     Map<Object, DataTag> batch1 = dataTagLoaderDAO.getBatchAsMap(1L, 100L);
-    assertNotNull(batch1);
-    assertEquals(expectedResult.size(), batch1.size());
-    assertTrue(batch1.keySet().containsAll(expectedResult));
+    assertNotNull("Batch should not be null", batch1);
+    assertEquals("Expected " + batch1.size() + " entries", expectedResult.size(), batch1.size());
+    assertTrue("Mismatch in expected entries", batch1.keySet().containsAll(expectedResult));
     Map<Object, DataTag> batch2 = dataTagLoaderDAO.getBatchAsMap(1L, 10L);
-    assertEquals(10, batch2.size());
-    assertTrue(batch2.keySet().containsAll(expectedResult.subList(0, 9)));
+    assertEquals("Expected 10 entries between rows 1 and 10", 10, batch2.size());
+    assertTrue("Entries between rows 1 and 10 do not match", batch2.keySet().containsAll(expectedResult.subList(0, 9)));
     Map<Object, DataTag> batch3 = dataTagLoaderDAO.getBatchAsMap(11L, 16L);
-    assertEquals(6, batch3.size());
-    assertTrue(batch3.keySet().containsAll(expectedResult.subList(10, 15)));
+    assertEquals("Expected 6 entries between rows 10 and 15", 6, batch3.size());
+    assertTrue("Entries between rows 10 and 15 do not match", batch3.keySet().containsAll(expectedResult.subList(10, 15)));
   }
 }

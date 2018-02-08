@@ -1,5 +1,7 @@
 package cern.c2mon.server.test;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.dbcp.BasicDataSource;
 import org.junit.rules.ExternalResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +10,7 @@ import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
@@ -31,6 +34,7 @@ import java.sql.SQLException;
  * }
  */
 @Configuration
+@Slf4j
 public class DatabasePopulationRule extends ExternalResource {
 
   @Autowired
@@ -46,5 +50,14 @@ public class DatabasePopulationRule extends ExternalResource {
     }
     populator.addScript(new ClassPathResource("sql/cache-data-insert.sql"));
     DatabasePopulatorUtils.execute(populator, cacheDataSource);
+  }
+
+  @Override
+  protected void after() {
+    try {
+      cacheDataSource.getConnection().close();
+    } catch (SQLException e) {
+      log.error("Could not close DB connection", e);
+    }
   }
 }
