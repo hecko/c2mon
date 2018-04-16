@@ -65,6 +65,8 @@ It contains the most important settings and their default values you may want to
 
 The properties listed in the file can just as well be set as Java system properties with the `-D` option.
 
+`-Dc2mon.client.conf.url={link_to_the_configuration_properties}`
+
 
 ### Connecting to a remote C2MON server
 
